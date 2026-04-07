@@ -42,17 +42,15 @@ export default class NotificationBanner extends Component {
             </div>
           {{/if}}
           <div class="notification-banner__content">
-            {{#if @banner.icon}}
-              <div class="notification-banner__icon">
-                {{dIcon @banner.icon}}
-              </div>
+            {{#if @banner.title}}
+              <h2 class="notification-banner__header">
+                {{#if @banner.icon}}
+                  {{dIcon @banner.icon}}
+                {{/if}}
+                {{@banner.title}}
+              </h2>
             {{/if}}
-            <div class="notification-banner__text">
-              {{#if @banner.title}}
-                <h2 class="notification-banner__header">{{@banner.title}}</h2>
-              {{/if}}
-              <CookText @rawText={{@banner.message}} />
-            </div>
+            <CookText @rawText={{@banner.message}} />
           </div>
         </div>
       </div>
