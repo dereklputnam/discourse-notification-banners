@@ -38,6 +38,7 @@ banners:
           - "above-site-header"
           - "below-site-header"
           - "above-main-container"
+          - "before-sidebar-sections"
           - "top-notices"
       carousel:
         type: boolean
@@ -72,6 +73,12 @@ splide_options__above_main_container:
   type: string
   default: "{ \"autoHeight\": true, \"height\": \"8rem\", \"arrows\": false, \"autoplay\": true, \"direction\": \"ttb\", \"focus\": \"center\", \"gap\": 0, \"type\": \"loop\" }"
   description: "<a href=\"https://splidejs.com/guides/options/\" target=\"_blank\">Splide options</a> for banners above the main container"
+  textarea: true
+  refresh: true
+splide_options__before_sidebar_sections:
+  type: string
+  default: "{ \"autoHeight\": true, \"height\": \"8rem\", \"arrows\": false, \"autoplay\": true, \"direction\": \"ttb\", \"focus\": \"center\", \"gap\": 0, \"type\": \"loop\" }"
+  description: "<a href=\"https://splidejs.com/guides/options/\" target=\"_blank\">Splide options</a> for banners in the sidebar"
   textarea: true
   refresh: true
 splide_options__top_notices:

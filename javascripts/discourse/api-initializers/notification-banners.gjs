@@ -81,7 +81,7 @@ export default apiInitializer((api) => {
 
   loadScript(settings.theme_uploads.splide_js).then(() => {
     const el = document.querySelectorAll(
-      ".splide.notification-banners--above-site-header, .splide.notification-banners--below-site-header, .splide.notification-banners--above-main-container, .splide.notification-banners--top-notices"
+      ".splide.notification-banners--above-site-header, .splide.notification-banners--below-site-header, .splide.notification-banners--above-main-container, .splide.notification-banners--before-sidebar-sections, .splide.notification-banners--top-notices"
     );
     el.forEach((carousel) => {
       // eslint-disable-next-line no-undef
