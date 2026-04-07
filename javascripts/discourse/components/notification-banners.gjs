@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
+import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import NotificationBanner from "./notification-banner";
 
@@ -10,20 +9,6 @@ export default class NotificationBanners extends Component {
   @service currentUser;
   @service router;
   @service site;
-
-  @tracked enabledCarouselBanners = [];
-  @tracked enabledSoloBanners = [];
-
-  constructor() {
-    super(...arguments);
-    this.setBanners();
-    this.router.on("routeDidChange", this.setBanners);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.router.off("routeDidChange", this.setBanners);
-  }
 
   #filterBanners(banner) {
     const currentRoute = this.router.currentRoute;
@@ -96,18 +81,27 @@ export default class NotificationBanners extends Component {
     return true;
   }
 
-  get carouselBanners() {
-    if (!this.args.carouselBanners) {
-      return [];
-    }
-    return this.args.carouselBanners.filter(this.#filterBanners.bind(this));
+  get #filteredCarousel() {
+    return (this.args.carouselBanners ?? []).filter(
+      this.#filterBanners.bind(this)
+    );
   }
 
-  get soloBanners() {
-    if (!this.args.soloBanners) {
-      return [];
+  get #filteredSolo() {
+    return (this.args.soloBanners ?? []).filter(
+      this.#filterBanners.bind(this)
+    );
+  }
+
+  get enabledCarouselBanners() {
+    return this.#filteredCarousel.length >= 2 ? this.#filteredCarousel : [];
+  }
+
+  get enabledSoloBanners() {
+    if (this.#filteredCarousel.length < 2) {
+      return [...this.#filteredSolo, ...this.#filteredCarousel];
     }
-    return this.args.soloBanners.filter(this.#filterBanners.bind(this));
+    return this.#filteredSolo;
   }
 
   @cached
@@ -127,16 +121,6 @@ export default class NotificationBanners extends Component {
   @cached
   get currentUserGroupsSet() {
     return new Set(this.currentUserGroups);
-  }
-
-  @action
-  setBanners() {
-    if (this.carouselBanners.length < 2) {
-      this.enabledSoloBanners = [...this.soloBanners, ...this.carouselBanners];
-    } else {
-      this.enabledCarouselBanners = this.carouselBanners;
-      this.enabledSoloBanners = this.soloBanners;
-    }
   }
 
   <template>
