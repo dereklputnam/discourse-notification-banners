@@ -1,11 +1,5 @@
-#main-outlet:has(.notification-banners--above-main-container) {
-  display: flex;
-  flex-direction: column;
-}
-
-.above-main-container-outlet:has(.notification-banners--above-main-container) {
+.notification-banners--above-main-container {
   order: -1;
-  min-height: unset;
 }
 
 .notification-banners--above-site-header,
