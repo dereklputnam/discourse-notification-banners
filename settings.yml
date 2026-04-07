@@ -31,10 +31,6 @@ banners:
         validations:
           min_length: 15
           max_length: 500
-      background_color:
-        type: string
-        validations:
-          max_length: 6
       plugin_outlet:
         type: enum
         required: true

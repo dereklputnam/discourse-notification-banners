@@ -2,9 +2,6 @@ import { apiInitializer } from "discourse/lib/api";
 import loadScript from "discourse/lib/load-script";
 import NotificationBanners from "../components/notification-banners";
 
-// Cache for color calculations to avoid redundant computations
-const colorStyleCache = new Map();
-
 function loadSplideCSS() {
   if (document.getElementById("splide-css")) {
     return;
@@ -18,40 +15,6 @@ function loadSplideCSS() {
     href: settings.theme_uploads.splide_css,
   });
   document.head.appendChild(link);
-}
-
-function bannerStyles(background_color) {
-  // Check cache first
-  if (colorStyleCache.has(background_color)) {
-    return colorStyleCache.get(background_color);
-  }
-
-  let foregroundColor = "var(--primary)";
-  let backgroundColor = "var(--tertiary-low)";
-
-  if (background_color) {
-    const r = parseInt(background_color.substring(0, 2), 16);
-    const g = parseInt(background_color.substring(2, 4), 16);
-    const b = parseInt(background_color.substring(4, 6), 16);
-
-    const srgb = [r, g, b].map((i) => {
-      const normalized = i / 255;
-      return normalized <= 0.04045
-        ? normalized / 12.92
-        : Math.pow((normalized + 0.055) / 1.055, 2.4);
-    });
-
-    const L = 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
-    foregroundColor = L > 0.179 ? "#000000" : "#FFFFFF";
-    backgroundColor = `#${background_color}`;
-  }
-
-  const result = `background-color: ${backgroundColor}; color: ${foregroundColor};`;
-
-  // Cache the result
-  colorStyleCache.set(background_color, result);
-
-  return result;
 }
 
 // Utility function to transform outlet name for settings lookup
@@ -82,7 +45,6 @@ export default apiInitializer((api) => {
     const processedBanner = {
       ...banner,
       id: `notification-banner--${slugify(banner.id)}--${bannerConfigVersion}`,
-      styles: bannerStyles(banner.background_color),
     };
 
     // Initialize outlet if it doesn't exist

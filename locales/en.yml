@@ -27,9 +27,6 @@ en:
             message:
               label: Message
               description: "Notification banner message content"
-            background_color:
-              label: Background Color
-              description: "Set the background color of the banner. Only enter the hex code without the # symbol. i.e. 9EB83B"
             plugin_outlet:
               label: Plugin Outlet
               description: ""
