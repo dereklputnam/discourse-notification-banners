@@ -7,7 +7,6 @@
 
 .notification-banners--above-main-container {
   order: -1;
-  margin-bottom: 1em;
 }
 
 .notification-banners--above-site-header,
@@ -59,6 +58,11 @@
       }
     }
   }
+}
+
+// Override margin: 0 from group rule above
+.notification-banners--above-main-container {
+  margin-bottom: 1em;
 }
 
 .notification-banners--top-notices {
