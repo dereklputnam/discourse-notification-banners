@@ -1,3 +1,10 @@
+// above-main-container: make #main-outlet a flex column so order works,
+// then pull notification banner before the category description box
+#main-outlet:has(.notification-banners--above-main-container) {
+  display: flex;
+  flex-direction: column;
+}
+
 .notification-banners--above-main-container {
   order: -1;
 }
