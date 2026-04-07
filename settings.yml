@@ -21,6 +21,8 @@ banners:
         type: categories
       include_subcategories:
         type: boolean
+      icon:
+        type: string
       title:
         type: string
       message:

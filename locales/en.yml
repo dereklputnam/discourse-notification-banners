@@ -18,6 +18,9 @@ en:
             include_subcategories:
               label: Include subcategories
               description: "Also display the banner on subcategories of the selected categories."
+            icon:
+              label: Icon
+              description: "Optional icon displayed to the left of the title. Enter a Font Awesome icon name, e.g. <code>calendar-days</code>. Browse icons at <a href=\"https://fontawesome.com/icons\" target=\"_blank\">fontawesome.com/icons</a>."
             title:
               label: Title
               description: "Notification banner title, displayed in a H2 heading."

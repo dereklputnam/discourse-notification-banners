@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
+import dIcon from "discourse-common/helpers/d-icon";
 
 export default class NotificationBanner extends Component {
   @tracked
@@ -44,7 +45,12 @@ export default class NotificationBanner extends Component {
           {{/if}}
           <div class="notification-banner__content">
             {{#if @banner.title}}
-              <h2 class="notification-banner__header">{{@banner.title}}</h2>
+              <h2 class="notification-banner__header">
+                {{#if @banner.icon}}
+                  {{dIcon @banner.icon}}
+                {{/if}}
+                {{@banner.title}}
+              </h2>
             {{/if}}
             <CookText @rawText={{@banner.message}} />
           </div>
