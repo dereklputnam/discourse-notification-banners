@@ -1,3 +1,8 @@
+.above-main-container-outlet:has(.notification-banners--above-main-container) {
+  order: -1;
+  min-height: unset;
+}
+
 .notification-banners--above-site-header,
 .notification-banners--below-site-header,
 .notification-banners--above-main-container,
