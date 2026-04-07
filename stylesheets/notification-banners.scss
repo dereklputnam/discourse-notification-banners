@@ -5,8 +5,8 @@
   margin: 0;
 
   .notification-banner {
-    background: var(--tertiary-low);
-    color: var(--primary);
+    background: var(--tertiary);
+    color: var(--secondary);
     z-index: 2;
 
     &__wrapper {
