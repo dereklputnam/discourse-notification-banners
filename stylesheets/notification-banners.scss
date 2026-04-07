@@ -19,6 +19,8 @@
   .notification-banner {
     background: var(--tertiary-low);
     color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 0;
     z-index: 2;
 
     &__wrapper {
