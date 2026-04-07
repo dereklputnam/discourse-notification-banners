@@ -39,6 +39,7 @@ banners:
         choices:
           - "above-site-header"
           - "below-site-header"
+          - "above-main-container"
           - "top-notices"
       carousel:
         type: boolean
@@ -67,6 +68,12 @@ splide_options__below_site_header:
   type: string
   default: "{ \"autoHeight\": true, \"height\": \"8rem\", \"arrows\": false, \"autoplay\": true, \"direction\": \"ttb\", \"focus\": \"center\", \"gap\": 0, \"type\": \"loop\" }"
   description: "<a href=\"https://splidejs.com/guides/options/\" target=\"_blank\">Splide options</a> for banners below the site header"
+  textarea: true
+  refresh: true
+splide_options__above_main_container:
+  type: string
+  default: "{ \"autoHeight\": true, \"height\": \"8rem\", \"arrows\": false, \"autoplay\": true, \"direction\": \"ttb\", \"focus\": \"center\", \"gap\": 0, \"type\": \"loop\" }"
+  description: "<a href=\"https://splidejs.com/guides/options/\" target=\"_blank\">Splide options</a> for banners above the main container"
   textarea: true
   refresh: true
 splide_options__top_notices:
