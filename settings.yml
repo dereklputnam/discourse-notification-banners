@@ -48,8 +48,10 @@ banners:
         type: datetime
 
 banner_config_version:
-  type: datetime
-  default: "2025-11-04 00:00:00"
+  type: string
+  default: "2025-11-04"
+  min: 3
+  max: 15
   description: "When important changes are made to the banners, you must change this value to reset the banner visibility. This change ensures all your users see previously dismissed banners."
   refresh: true
 
