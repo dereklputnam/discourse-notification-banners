@@ -42,6 +42,8 @@ banners:
         type: boolean
       dismissable:
         type: boolean
+      include_subcategories:
+        type: boolean
       date_after:
         type: datetime
       date_before:

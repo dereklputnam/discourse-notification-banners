@@ -33,6 +33,9 @@ en:
             dismissable:
               label: Dismissible
               description: "Allow users to dismiss the banner by closing it.\nNote: When \"caraousel\" is enabled, this setting will be ignored."
+            include_subcategories:
+              label: Include subcategories
+              description: "Also display the banner on subcategories of the selected categories."
             date_after:
               label: Starting date
               description: "Display banner from this date on (optional)"

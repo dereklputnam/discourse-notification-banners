@@ -9,6 +9,7 @@ const TL_GROUPS = [10, 11, 12, 13, 14];
 export default class NotificationBanners extends Component {
   @service currentUser;
   @service router;
+  @service site;
 
   @tracked enabledCarouselBanners = [];
   @tracked enabledSoloBanners = [];
@@ -48,12 +49,24 @@ export default class NotificationBanners extends Component {
       return true;
     }
 
+    if (currentRoute.name !== "discovery.category") {
+      return false;
+    }
+
     const categoryId = currentRoute.attributes?.category?.id;
 
-    return (
-      currentRoute.name === "discovery.category" &&
-      banner.selected_categories?.includes(categoryId)
-    );
+    if (banner.selected_categories?.includes(categoryId)) {
+      return true;
+    }
+
+    if (banner.include_subcategories) {
+      const parentId = this.site.categories.find(
+        (c) => c.id === categoryId
+      )?.parent_category_id;
+      return banner.selected_categories?.includes(parentId);
+    }
+
+    return false;
   }
 
   #matchedAudience(banner) {
