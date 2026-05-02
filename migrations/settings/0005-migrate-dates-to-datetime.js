@@ -1,29 +1,26 @@
 export default function migrate(settings) {
+  if (!settings.has("banners")) {
+    return settings;
+  }
+
   const toISOString = (value) => {
     if (!value) {
-      return value;
+      return null;
     }
     const timestamp = Date.parse(value);
-    if (isNaN(timestamp)) {
-      return value;
+    if (Number.isNaN(timestamp)) {
+      throw new Error(`Migration stopped. Cannot parse date value: "${value}"`);
     }
     return new Date(timestamp).toISOString();
   };
 
-  if (settings.has("banners")) {
-    const banners = settings.get("banners");
-    const updatedBanners = banners.map((banner) => {
-      const updated = { ...banner };
-      if (updated.date_after) {
-        updated.date_after = toISOString(updated.date_after);
-      }
-      if (updated.date_before) {
-        updated.date_before = toISOString(updated.date_before);
-      }
-      return updated;
-    });
-    settings.set("banners", updatedBanners);
-  }
+  const banners = settings.get("banners");
+  const updated = banners.map((banner) => ({
+    ...banner,
+    date_after: toISOString(banner.date_after),
+    date_before: toISOString(banner.date_before),
+  }));
 
+  settings.set("banners", updated);
   return settings;
 }
