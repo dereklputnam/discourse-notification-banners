@@ -1,14 +1,66 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { eventState, topicIdFromUrl } from "../lib/event-banner";
 import NotificationBanner from "./notification-banner";
 
 const TL_GROUPS = [10, 11, 12, 13, 14];
+const TICK_MS = 30 * 1000;
+
+// Topic events are shared between outlets so each topic is fetched once.
+const topicEventRequests = new Map();
+
+function fetchTopicEvent(topicUrl) {
+  const id = topicIdFromUrl(topicUrl);
+  if (!id) {
+    return Promise.resolve(null);
+  }
+  if (!topicEventRequests.has(id)) {
+    topicEventRequests.set(
+      id,
+      ajax(`/t/${id}.json`)
+        .then((topic) => topic.post_stream?.posts?.[0]?.event ?? null)
+        .catch(() => null)
+    );
+  }
+  return topicEventRequests.get(id);
+}
 
 export default class NotificationBanners extends Component {
   @service currentUser;
   @service router;
   @service site;
+
+  @tracked now = Date.now();
+  @tracked topicEvents = {};
+
+  constructor() {
+    super(...arguments);
+    this.timer = setInterval(() => (this.now = Date.now()), TICK_MS);
+    this.#loadTopicEvents();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    clearInterval(this.timer);
+  }
+
+  async #loadTopicEvents() {
+    const banners = [
+      ...(this.args.carouselBanners ?? []),
+      ...(this.args.soloBanners ?? []),
+    ].filter((banner) => banner.event_topic);
+
+    await Promise.all(
+      banners.map(async (banner) => {
+        const event = await fetchTopicEvent(banner.event_topic);
+        if (event && !this.isDestroying && !this.isDestroyed) {
+          this.topicEvents = { ...this.topicEvents, [banner.event_topic]: event };
+        }
+      })
+    );
+  }
 
   #filterBanners(banner) {
     const currentRoute = this.router.currentRoute;
@@ -18,7 +70,8 @@ export default class NotificationBanners extends Component {
       !this.#adminRoute(currentRoute) &&
       this.#matchedCategory(banner, currentRoute) &&
       this.#matchedAudience(banner) &&
-      this.#withinDateRange(banner, now)
+      this.#withinDateRange(banner, now) &&
+      this.#eventNotEnded(banner)
     );
   }
 
@@ -55,12 +108,18 @@ export default class NotificationBanners extends Component {
   }
 
   #matchedAudience(banner) {
-    // If no groups are specified, allow the banner
+    // Group membership is resolved server-side (resolve_group_membership), so
+    // we avoid the deprecated currentUser.groups. Trust level groups match that
+    // level and above, as in core.
+    if (typeof banner.user_in_enabled_groups === "boolean") {
+      return banner.user_in_enabled_groups;
+    }
+
+    // Fallback for Discourse versions without resolve_group_membership.
     if (banner.enabled_groups?.length === 1 && banner.enabled_groups[0] === 0) {
       return true;
     }
 
-    // If groups are specified, check if user has any of them
     const userGroupsSet = this.currentUserGroupsSet;
     return banner.enabled_groups
       .filter((group) => group !== 0)
@@ -79,6 +138,17 @@ export default class NotificationBanners extends Component {
     }
 
     return true;
+  }
+
+  #eventNotEnded(banner) {
+    const state = eventState(
+      banner,
+      this.topicEvents[banner.event_topic],
+      this.now,
+      settings.event_live_duration_minutes,
+      settings.event_soon_minutes
+    );
+    return state?.phase !== "ended";
   }
 
   get #filteredCarousel() {
@@ -136,7 +206,11 @@ export default class NotificationBanners extends Component {
           <ul class="splide__list">
             {{#each this.enabledCarouselBanners as |banner|}}
               <li class="splide__slide">
-                <NotificationBanner @banner={{banner}} />
+                <NotificationBanner
+                  @banner={{banner}}
+                  @now={{this.now}}
+                  @topicEvents={{this.topicEvents}}
+                />
               </li>
             {{/each}}
           </ul>
@@ -147,7 +221,11 @@ export default class NotificationBanners extends Component {
     {{#if this.enabledSoloBanners}}
       <section class="notification-banners--{{@outlet}}">
         {{#each this.enabledSoloBanners as |banner|}}
-          <NotificationBanner @banner={{banner}} />
+          <NotificationBanner
+                  @banner={{banner}}
+                  @now={{this.now}}
+                  @topicEvents={{this.topicEvents}}
+                />
         {{/each}}
       </section>
     {{/if}}

@@ -9,12 +9,11 @@ banners:
       id:
         type: string
         required: true
-        validations:
-          min_length: 6
-          max_length: 6
       enabled_groups:
         type: groups
         required: true
+        default: [0]
+        resolve_group_membership: true
         validations:
           min: 1
       selected_categories:
@@ -35,7 +34,7 @@ banners:
           - "heart"
           - "lock"
           - "magnifying-glass"
-          - "megaphone"
+          - "bullhorn"
           - "pencil"
           - "shield-halved"
           - "star"
@@ -50,9 +49,26 @@ banners:
         validations:
           min_length: 15
           max_length: 500
+      event_start:
+        type: datetime
+      event_end:
+        type: datetime
+      event_topic:
+        type: string
+      soon_message:
+        type: string
+        validations:
+          max_length: 500
+      live_title:
+        type: string
+      live_message:
+        type: string
+        validations:
+          max_length: 500
       plugin_outlet:
         type: enum
         required: true
+        default: "above-main-container"
         choices:
           - "above-site-header"
           - "below-site-header"
@@ -67,6 +83,22 @@ banners:
         type: datetime
       date_before:
         type: datetime
+
+event_live_duration_minutes:
+  type: integer
+  default: 30
+  min: 5
+  max: 240
+  description: "How long an event banner shows its live message after the event starts when the banner has no end time."
+  refresh: true
+
+event_soon_minutes:
+  type: integer
+  default: 5
+  min: 1
+  max: 30
+  description: "How many minutes before an event starts its banner switches to the Soon message (only for banners that have one)."
+  refresh: true
 
 banner_config_version:
   type: string

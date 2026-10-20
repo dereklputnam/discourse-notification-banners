@@ -2,16 +2,20 @@ en:
   theme_metadata:
     description: The Notification Banners theme-component provides a customizable and flexible way to share messages on your site.
     settings:
+      event_live_duration_minutes:
+        description: "How long an event banner shows its live message after the event starts when the banner has no end time."
+      event_soon_minutes:
+        description: "How many minutes before an event starts its banner switches to the Soon message (only for banners that have one)."
       banners:
         description: Add notification banners to your site
         schema:
           properties:
             id:
               label: Banner ID
-              description: "A unique identifier for the banner. Used for dismissed banners.<br>6 characters; only a-z, A-Z, 0-9, and hyphens."
+              description: "A unique identifier for the banner. Used for dismissed banners.<br>Required. Use a short word or phrase, e.g. <code>maintenance-notice</code>. Don't reuse an ID, and changing it makes the banner reappear for users who dismissed it."
             enabled_groups:
               label: Audience
-              description: "Select which user groups can see this banner. You must select at least one group.\n\n <b>To show to all users and visitors:</b> Select the <code>everyone</code> group.\n\n <b>Important note on Trust Levels:</b> Selecting a Trust Level (e.g., <code>trust_level_3</code>) will show the banner <b>only</b> to users at that exact level. It does not include users at higher or lower levels."
+              description: "Select which user groups can see this banner. You must select at least one group.\n\n <b>To show to all users and visitors:</b> Select the <code>everyone</code> group.\n\n <b>Trust Levels:</b> Selecting a Trust Level (e.g., <code>trust_level_1</code>) shows the banner to users at that level <b>and above</b>."
             selected_categories:
               label: Categories
               description: "Select categories to display the banner on. Leave empty to display on all categories."
@@ -20,13 +24,31 @@ en:
               description: "Also display the banner on subcategories of the selected categories."
             icon:
               label: Icon
-              description: "Optional icon displayed to the left of the title. Enter a Font Awesome 6 icon name, e.g. <code>calendar-days</code>. Only icons already used by Discourse core will work by default — others must be added under Admin &gt; Customize &gt; Icons."
+              description: "Optional icon displayed to the left of the title (a title is required for the icon to show). Choose from the list: <code>bell</code>, <code>bookmark</code>, <code>calendar-days</code>, <code>circle-info</code> (info), <code>envelope</code> (email), <code>flag</code>, <code>heart</code>, <code>lock</code>, <code>magnifying-glass</code> (search), <code>bullhorn</code> (announcement), <code>pencil</code> (edit), <code>shield-halved</code> (security), <code>star</code>, <code>tag</code>, <code>triangle-exclamation</code> (warning), <code>wrench</code> (maintenance)."
             title:
               label: Title
               description: "Notification banner title, displayed in a H2 heading."
             message:
               label: Message
               description: "Notification banner message content"
+            event_start:
+              label: Event start
+              description: "Makes this an event banner. Before this time, the Message is shown and <code>{countdown}</code> becomes the start time in each viewer's timezone (e.g. \"Today 2:00 PM\" or \"Thursday at 2:00 PM\"), then \"in 45 minutes\" for the final hour. Write the Message without \"in\", e.g. \"We'll be live {countdown}\". At this time it switches to the Live message. Overrides the start time from the event topic."
+            event_end:
+              label: Event end
+              description: "Optional. The live message hides after this time. Leave blank to hide it after the live duration set at the component level (default 30 minutes)."
+            event_topic:
+              label: Event topic URL
+              description: "Optional. URL of a Discourse topic with a Calendar event; its start and end times are used unless you fill in the fields above."
+            soon_message:
+              label: Soon message
+              description: "Optional. Shown in the last few minutes before the event starts (default 5, set at the component level), e.g. <code>Starting {countdown}! [Join now](https://www.twitch.tv/netwrixtv)</code>. Markdown supported; <code>{countdown}</code> works here too. If empty, the regular Message keeps counting down."
+            live_title:
+              label: Live title
+              description: "Optional. Title shown from the event start instead of the Title above. If empty, the regular Title is kept."
+            live_message:
+              label: Live message
+              description: "Shown from the event start, e.g. <code>[Join us on Twitch](https://www.twitch.tv/netwrixtv)</code>. Markdown supported. If empty, a generic message is shown."
             plugin_outlet:
               label: Plugin Outlet
               description: ""

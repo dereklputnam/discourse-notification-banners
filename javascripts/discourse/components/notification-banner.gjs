@@ -4,20 +4,54 @@ import { action } from "@ember/object";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import dIcon from "discourse-common/helpers/d-icon";
+import { eventMessage, eventState } from "../lib/event-banner";
 
 export default class NotificationBanner extends Component {
-  @tracked
-  dismissed = this.args.banner.dismissable
-    ? localStorage.getItem(this.args.banner.id)
-    : false;
+  @tracked dismissRevision = 0;
+
+  get eventState() {
+    return eventState(
+      this.args.banner,
+      this.args.topicEvents?.[this.args.banner.event_topic],
+      this.args.now ?? Date.now(),
+      settings.event_live_duration_minutes,
+      settings.event_soon_minutes
+    );
+  }
+
+  get message() {
+    const state = this.eventState;
+    return state ? eventMessage(this.args.banner, state) : this.args.banner.message;
+  }
+
+  get title() {
+    const live = this.eventState?.phase === "live";
+    return (live && this.args.banner.live_title) || this.args.banner.title;
+  }
+
+  // The live stage of an event banner is dismissed separately from the countdown.
+  get dismissKey() {
+    const phase = this.eventState?.phase;
+    return phase === "live" || phase === "soon"
+      ? `${this.args.banner.id}--${phase}`
+      : this.args.banner.id;
+  }
+
+  get dismissed() {
+    // eslint-disable-next-line no-unused-expressions
+    this.dismissRevision;
+    return this.args.banner.dismissable
+      ? !!localStorage.getItem(this.dismissKey)
+      : false;
+  }
 
   @action
   dismiss() {
     if (!this.args.banner.dismissable) {
       return;
     }
-    this.dismissed = true;
-    return localStorage.setItem(this.args.banner.id, true);
+    localStorage.setItem(this.dismissKey, true);
+    this.dismissRevision++;
   }
 
   get showBanner() {
@@ -42,15 +76,15 @@ export default class NotificationBanner extends Component {
             </div>
           {{/if}}
           <div class="notification-banner__content">
-            {{#if @banner.title}}
+            {{#if this.title}}
               <h2 class="notification-banner__header">
                 {{#if @banner.icon}}
                   {{dIcon @banner.icon}}
                 {{/if}}
-                {{@banner.title}}
+                {{this.title}}
               </h2>
             {{/if}}
-            <CookText @rawText={{@banner.message}} />
+            <CookText @rawText={{this.message}} />
           </div>
         </div>
       </div>
