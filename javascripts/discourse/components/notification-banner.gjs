@@ -40,14 +40,14 @@ export default class NotificationBanner extends Component {
   get dismissed() {
     // eslint-disable-next-line no-unused-expressions
     this.dismissRevision;
-    return this.args.banner.dismissable
+    return this.args.banner.dismissible
       ? !!localStorage.getItem(this.dismissKey)
       : false;
   }
 
   @action
   dismiss() {
-    if (!this.args.banner.dismissable) {
+    if (!this.args.banner.dismissible) {
       return;
     }
     localStorage.setItem(this.dismissKey, true);
@@ -65,7 +65,7 @@ export default class NotificationBanner extends Component {
         class="notification-banner"
       >
         <div class="notification-banner__wrapper wrap">
-          {{#if @banner.dismissable}}
+          {{#if @banner.dismissible}}
             <div class="notification-banner__close">
               <DButton
                 @icon="xmark"
