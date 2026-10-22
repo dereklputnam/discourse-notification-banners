@@ -33,7 +33,7 @@ en:
               description: "Notification banner message content"
             event_start:
               label: Event start
-              description: "Makes this an event banner. Before this time, the Message is shown and <code>{countdown}</code> becomes the start time in each viewer's timezone (e.g. \"Today 2:00 PM\" or \"Thursday at 2:00 PM\"), then \"in 45 minutes\" for the final hour. Write the Message without \"in\", e.g. \"We'll be live {countdown}\". At this time it switches to the Live message. Overrides the start time from the event topic."
+              description: "Makes this an event banner. Before this time, the Message is shown and <code>{countdown}</code> becomes the start time in each viewer's timezone (e.g. \"today 2:00 PM\" or \"Thursday at 2:00 PM\"), then \"in 45 minutes\" for the final hour. Write the Message without \"in\", e.g. \"We'll be live {countdown}\". At this time it switches to the Live message. Overrides the start time from the event topic."
             event_end:
               label: Event end
               description: "Optional. The live message hides after this time. Leave blank to hide it after the live duration set at the component level (default 30 minutes)."

@@ -46,7 +46,7 @@ function startOfDay(time) {
 }
 
 // Start time in the viewer's timezone, styled like Discourse local dates:
-// "Today 2:00 PM", "Tomorrow 2:00 PM", "Thursday at 2:00 PM" (within a week),
+// "today 2:00 PM", "tomorrow 2:00 PM", "Thursday at 2:00 PM" (within a week),
 // then "October 23, 2026 2:00 PM".
 export function formatLocalTime(time, now, locale) {
   const clock = new Intl.DateTimeFormat(locale, {
@@ -55,10 +55,10 @@ export function formatLocalTime(time, now, locale) {
   }).format(time);
   const days = Math.round((startOfDay(time) - startOfDay(now)) / DAY);
   if (days === 0) {
-    return `Today ${clock}`;
+    return `today ${clock}`;
   }
   if (days === 1) {
-    return `Tomorrow ${clock}`;
+    return `tomorrow ${clock}`;
   }
   if (days > 1 && days < 7) {
     const weekday = new Intl.DateTimeFormat(locale, { weekday: "long" }).format(
