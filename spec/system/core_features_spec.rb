@@ -9,7 +9,12 @@
 #
 # For more details, see https://meta.discourse.org/t/-/361381
 RSpec.describe "Core features", type: :system do
-  before { upload_theme_or_component }
+  before do
+    # The theme uploads Splide's css and js assets.
+    SiteSetting.theme_authorized_extensions =
+      "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js|css"
+    upload_theme_or_component
+  end
 
   it_behaves_like "having working core features",
                   skip_examples: %i[

@@ -4,6 +4,12 @@ RSpec.describe "Notification Banners", system: true do
   before do
     SiteSetting.theme_authorized_extensions =
       "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js|css"
+
+    # With the granular pseudogroups setting on, Discourse no longer matches the
+    # "everyone" group (0), which these banners use. Test the default behavior.
+    if SiteSetting.respond_to?(:granular_anonymous_and_logged_in_groups_permissions=)
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    end
   end
 
   let!(:theme_component) { upload_theme_component }
