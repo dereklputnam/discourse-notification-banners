@@ -24,7 +24,7 @@ en:
               description: "Also display the banner on subcategories of the selected categories."
             icon:
               label: Icon
-              description: "Optional icon displayed to the left of the title (a title is required for the icon to show). Choose from the list: <code>bell</code>, <code>bookmark</code>, <code>calendar-days</code>, <code>circle-info</code> (info), <code>envelope</code> (email), <code>flag</code>, <code>flask</code> (test/experiment), <code>heart</code>, <code>lock</code>, <code>magnifying-glass</code> (search), <code>bullhorn</code> (announcement), <code>pencil</code> (edit), <code>shield-halved</code> (security), <code>star</code>, <code>tag</code>, <code>triangle-exclamation</code> (warning), <code>wrench</code> (maintenance)."
+              description: "Optional icon displayed to the left of the title (a title is required for the icon to show). Choose from the list: <code>bell</code>, <code>bolt</code> (power/fast), <code>bookmark</code>, <code>bullhorn</code> (announcement), <code>calendar-days</code>, <code>circle-info</code> (info), <code>envelope</code> (email), <code>flag</code>, <code>flask</code> (test/experiment), <code>heart</code>, <code>lock</code>, <code>magnifying-glass</code> (search), <code>microphone</code> (podcast/audio), <code>pencil</code> (edit), <code>play</code> (video), <code>puzzle-piece</code> (integration), <code>robot</code> (AI/bot), <code>shield-halved</code> (security), <code>star</code>, <code>tag</code>, <code>thumbtack</code> (pinned), <code>triangle-exclamation</code> (warning), <code>wrench</code> (maintenance)."
             title:
               label: Title
               description: "Notification banner title, displayed in a H2 heading."

@@ -15,7 +15,9 @@
   "modifiers": {
     "svg_icons": [
       "bell",
+      "bolt",
       "bookmark",
+      "bullhorn",
       "calendar-days",
       "circle-info",
       "envelope",
@@ -24,11 +26,15 @@
       "heart",
       "lock",
       "magnifying-glass",
-      "bullhorn",
+      "microphone",
       "pencil",
+      "play",
+      "puzzle-piece",
+      "robot",
       "shield-halved",
       "star",
       "tag",
+      "thumbtack",
       "triangle-exclamation",
       "wrench"
     ]
