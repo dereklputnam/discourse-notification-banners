@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import { eventMessage, eventState } from "../lib/event-banner";
 
 export default class NotificationBanner extends Component {
@@ -21,7 +21,9 @@ export default class NotificationBanner extends Component {
 
   get message() {
     const state = this.eventState;
-    return state ? eventMessage(this.args.banner, state) : this.args.banner.message;
+    return state
+      ? eventMessage(this.args.banner, state)
+      : this.args.banner.message;
   }
 
   get title() {
@@ -38,7 +40,6 @@ export default class NotificationBanner extends Component {
   }
 
   get dismissed() {
-    // eslint-disable-next-line no-unused-expressions
     this.dismissRevision;
     return this.args.banner.dismissible
       ? !!localStorage.getItem(this.dismissKey)
@@ -60,10 +61,7 @@ export default class NotificationBanner extends Component {
 
   <template>
     {{#if this.showBanner}}
-      <div
-        id={{@banner.id}}
-        class="notification-banner"
-      >
+      <div id={{@banner.id}} class="notification-banner">
         <div class="notification-banner__wrapper wrap">
           {{#if @banner.dismissible}}
             <div class="notification-banner__close">

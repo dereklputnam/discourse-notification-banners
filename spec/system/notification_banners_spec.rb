@@ -1,14 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe "Notification Banners", system: true do
+  before do
+    SiteSetting.theme_authorized_extensions =
+      "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js|css"
+
+    # With the granular pseudogroups setting on, Discourse no longer matches the
+    # "everyone" group (0), which these banners use. Test the default behavior.
+    if SiteSetting.respond_to?(:granular_anonymous_and_logged_in_groups_permissions=)
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    end
+  end
+
   let!(:theme_component) { upload_theme_component }
   fab!(:category)
   fab!(:group)
   fab!(:user) { Fabricate(:user, groups: [group]) }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  SiteSetting.theme_authorized_extensions =
-    "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js|css"
+  before { sign_in(user) }
 
   context "when displaying a notification banner for all users" do
     before do
@@ -22,12 +32,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Test Banner",
             "message" => "This is a test banner",
-            "background_color" => "ff0000",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => true,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -52,12 +61,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Dismiss Me",
             "message" => "Dismissible banner",
-            "background_color" => "00ff00",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => true,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -83,7 +91,6 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Future Banner",
             "message" => "Should not show yet",
-            "background_color" => "0000ff",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => false,
@@ -111,12 +118,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Group Banner",
             "message" => "Visible to group",
-            "background_color" => "123456",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -145,12 +151,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [category.id],
             "title" => "Category Banner",
             "message" => "Only in category",
-            "background_color" => "abcdef",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -177,12 +182,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Carousel One",
             "message" => "First carousel banner content",
-            "background_color" => "111111",
             "plugin_outlet" => "above-site-header",
             "carousel" => true,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
           {
             "id" => "AH-002",
@@ -190,12 +194,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Carousel Two",
             "message" => "Second carousel banner content",
-            "background_color" => "222222",
             "plugin_outlet" => "above-site-header",
             "carousel" => true,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -221,12 +224,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Single Carousel",
             "message" => "Only one carousel banner so it should render solo",
-            "background_color" => "333333",
             "plugin_outlet" => "above-site-header",
             "carousel" => true,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -251,12 +253,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Above Header",
             "message" => "Banner above the site header",
-            "background_color" => "444444",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
           {
             "id" => "BH-001",
@@ -264,12 +265,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Below Header",
             "message" => "Banner below the site header",
-            "background_color" => "555555",
             "plugin_outlet" => "below-site-header",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
           {
             "id" => "TN-001",
@@ -277,12 +277,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "Top Notices",
             "message" => "Banner in top notices",
-            "background_color" => "666666",
             "plugin_outlet" => "top-notices",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -308,12 +307,11 @@ RSpec.describe "Notification Banners", system: true do
             "selected_categories" => [],
             "title" => "No Admin",
             "message" => "Should not be visible in admin routes",
-            "background_color" => "777777",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
@@ -326,7 +324,7 @@ RSpec.describe "Notification Banners", system: true do
     end
   end
 
-  context "when applying background color styles" do
+  context "when a banner is shown everywhere" do
     before do
       theme_component.update_setting(
         :banners,
@@ -335,43 +333,26 @@ RSpec.describe "Notification Banners", system: true do
             "id" => "AH-001",
             "enabled_groups" => [0],
             "selected_categories" => [],
-            "title" => "Dark BG",
-            "message" => "Foreground should be white on dark background",
-            "background_color" => "000000",
+            "title" => "Everywhere",
+            "message" => "Visible on public pages only",
             "plugin_outlet" => "above-site-header",
             "carousel" => false,
             "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
-          },
-          {
-            "id" => "BH-001",
-            "enabled_groups" => [0],
-            "selected_categories" => [],
-            "title" => "Light BG",
-            "message" => "Foreground should be black on light background",
-            "background_color" => "FFFFFF",
-            "plugin_outlet" => "below-site-header",
-            "carousel" => false,
-            "dismissible" => false,
-            "date_after" => "",
-            "date_before" => "",
+            "date_after" => nil,
+            "date_before" => nil,
           },
         ].to_json,
       )
       theme_component.save!
     end
 
-    it "sets inline styles for background and foreground color based on luminance" do
+    it "displays on public pages but not on user profiles" do
       visit "/"
+      expect(page).to have_css(".notification-banner", text: "Everywhere")
 
-      dark = find(".notification-banner", text: "Dark BG", match: :first)
-      expect(dark[:style]).to include("background-color: #000000")
-      expect(dark[:style]).to match(/color: #FFFFFF|color: rgb\(255, 255, 255\)/)
-
-      light = find(".notification-banner", text: "Light BG", match: :first)
-      expect(light[:style]).to include("background-color: #FFFFFF")
-      expect(light[:style]).to match(/color: #000000|color: rgb\(0, 0, 0\)/)
+      visit "/u/#{user.username}/summary"
+      expect(page).to have_css(".user-main")
+      expect(page).to have_no_css(".notification-banner", text: "Everywhere")
     end
   end
 end

@@ -27,7 +27,9 @@ export function formatCountdown(ms) {
   if (ms >= DAY) {
     const days = Math.floor(ms / DAY);
     const hours = Math.floor((ms % DAY) / HOUR);
-    return hours ? `${plural(days, "day")} ${plural(hours, "hour")}` : plural(days, "day");
+    return hours
+      ? `${plural(days, "day")} ${plural(hours, "hour")}`
+      : plural(days, "day");
   }
   const hours = Math.floor(ms / HOUR);
   const minutes = Math.floor((ms % HOUR) / MINUTE);
@@ -42,7 +44,11 @@ export function formatCountdown(ms) {
 
 function startOfDay(time) {
   const date = new Date(time);
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  ).getTime();
 }
 
 // Start time in the viewer's timezone, styled like Discourse local dates:
@@ -78,14 +84,21 @@ export function formatLocalTime(time, now, locale) {
 // phase is "before", "soon" (only with a soon_message), "live" or "ended". Manual fields override the topic event.
 // A banner that references a topic whose event can't be resolved returns
 // { phase: "ended" } so it stays hidden instead of showing a wrong message.
-export function eventState(banner, topicEvent, now, liveMinutes, soonMinutes = 5) {
+export function eventState(
+  banner,
+  topicEvent,
+  now,
+  liveMinutes,
+  soonMinutes = 5
+) {
   const hasEventConfig =
     banner.event_start || banner.event_end || banner.event_topic;
   if (!hasEventConfig) {
     return null;
   }
 
-  const start = parseTime(banner.event_start) ?? parseTime(topicEvent?.starts_at);
+  const start =
+    parseTime(banner.event_start) ?? parseTime(topicEvent?.starts_at);
   if (start === null) {
     return { phase: "ended" };
   }

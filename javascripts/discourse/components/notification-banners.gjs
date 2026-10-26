@@ -56,7 +56,10 @@ export default class NotificationBanners extends Component {
       banners.map(async (banner) => {
         const event = await fetchTopicEvent(banner.event_topic);
         if (event && !this.isDestroying && !this.isDestroyed) {
-          this.topicEvents = { ...this.topicEvents, [banner.event_topic]: event };
+          this.topicEvents = {
+            ...this.topicEvents,
+            [banner.event_topic]: event,
+          };
         }
       })
     );
@@ -178,9 +181,7 @@ export default class NotificationBanners extends Component {
   }
 
   get #filteredSolo() {
-    return (this.args.soloBanners ?? []).filter(
-      this.#filterBanners.bind(this)
-    );
+    return (this.args.soloBanners ?? []).filter(this.#filterBanners.bind(this));
   }
 
   get enabledCarouselBanners() {
@@ -242,10 +243,10 @@ export default class NotificationBanners extends Component {
       <section class="notification-banners--{{@outlet}}">
         {{#each this.enabledSoloBanners as |banner|}}
           <NotificationBanner
-                  @banner={{banner}}
-                  @now={{this.now}}
-                  @topicEvents={{this.topicEvents}}
-                />
+            @banner={{banner}}
+            @now={{this.now}}
+            @topicEvents={{this.topicEvents}}
+          />
         {{/each}}
       </section>
     {{/if}}
