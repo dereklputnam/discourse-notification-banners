@@ -79,12 +79,32 @@ export default class NotificationBanners extends Component {
     return currentRoute.name?.startsWith("admin");
   }
 
+  // User profiles and preferences (user*, preferences*), the private message
+  // lists (userPrivateMessages) and private message topics. The topic model
+  // sits on a parent of the current route (topic.fromParams -> topic).
+  #privateRoute(currentRoute) {
+    if (/^(user|preferences)/.test(currentRoute.name ?? "")) {
+      return true;
+    }
+
+    for (let route = currentRoute; route; route = route.parent) {
+      if (
+        route.attributes?.isPrivateMessage === true ||
+        route.attributes?.archetype === "private_message"
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   #matchedCategory(banner, currentRoute) {
     if (
       !("selected_categories" in banner) ||
       banner.selected_categories?.length === 0
     ) {
-      return true;
+      // Banners shown "everywhere" stay out of private areas.
+      return !this.#privateRoute(currentRoute);
     }
 
     if (currentRoute.name !== "discovery.category") {
